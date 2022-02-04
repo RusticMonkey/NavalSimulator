@@ -1,4 +1,6 @@
 export class Gun {
-    constructor(private name: string, private range: number, private barrels: number, 
-        private rateOfFire: number, private calibre: number, private dualPurpose: boolean) {}
+   
+    constructor(readonly name: string, readonly range: number, readonly barrels: number, 
+        readonly rateOfFire: number, readonly calibre: number, readonly dualPurpose: boolean) {
+        }
 }
