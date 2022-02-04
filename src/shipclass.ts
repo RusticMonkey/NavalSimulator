@@ -65,7 +65,7 @@ export class ShipClass implements CombatAlgorithms {
     }
 
     private resolveArmourPenetration(numHits: number, targetArmour: number, shotCalibre: number, dicePool: Dice, combatLog: string[]): number {
-        const targetScore = Math.ceil(12-(shotCalibre - targetArmour))
+        const targetScore = Math.ceil(10-(shotCalibre - targetArmour))
         combatLog.push(`Target pen score is ${targetScore}`)
         const diceRolls = dicePool.rollD10(numHits)
         combatLog.push(`Rolled: ${diceRolls}`)
