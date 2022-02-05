@@ -1,6 +1,8 @@
 import { ArmourScheme } from './armourscheme'
+import { Combat } from './combat'
 import { Dice } from './dice'
 import { Gun } from './gun'
+import { Ship } from './ship'
 import {ShipClass} from './shipclass'
 
 console.log('---------------------------------')
@@ -38,39 +40,40 @@ const bismarckArmour = new ArmourScheme(13, 4, 13)
 const bismarckGuns = new Array<Gun>()
 bismarckGuns.push(new Gun('8 x 38cm', 37, 8, 2.5, 15, false))
 bismarckGuns.push(new Gun('12 x 15 cm', 23, 12, 8, 6, false))
-const bismarck = new ShipClass('Bismarck', 'Kriegsmarine', 6, 41, bismarckArmour, bismarckGuns)
+const bismarckCruiser = new ShipClass('Bismarck', 'Kriegsmarine', 6, 41, bismarckArmour, bismarckGuns)
 
 const type1936AArmour = new ArmourScheme(0, 0, 0)
 const type1936AGuns = new Array<Gun>()
 type1936AGuns.push(new Gun('4 x single 15cm cm', 23, 4, 8, 6, false))
 const type1936A = new ShipClass('Type 1936A', 'Kriegsmarine', 2, 3, type1936AArmour, type1936AGuns)
 const dicePool = new Dice()
+const combat = new Combat()
 
-function SimulateCombat(combatant1: ShipClass, combatant2: ShipClass, startingRange: number, closingRate: number, minimumRange: number, dicePool: Dice) {
+function SimulateCombat(combatant1: Ship, combatant2: Ship, startingRange: number, closingRate: number, minimumRange: number, dicePool: Dice) {
     console.log("-------------------------")
     console.log(`Simulating combat between ${combatant1.name} and ${combatant2.name}`)
     for (let range=startingRange; range >= minimumRange; range -= closingRate) {
         console.log(`RANGE ${range}`)
-        if (combatant1.scale < combatant2.scale) {
-            console.log(combatant1.fireGuns(combatant2, range, dicePool))
-            console.log(combatant2.fireGuns(combatant1, range, dicePool))
+        if (combatant1.shipClass.scale < combatant2.shipClass.scale) {
+            console.log(combat.fireGuns(combatant1, combatant2, range, dicePool))
+            console.log(combat.fireGuns(combatant2, combatant1, range, dicePool))
         }
         else{
-            console.log(combatant2.fireGuns(combatant1, range, dicePool))
-            console.log(combatant1.fireGuns(combatant2, range, dicePool))
+            console.log(combat.fireGuns(combatant2, combatant1, range, dicePool))
+            console.log(combat.fireGuns(combatant1, combatant2, range, dicePool))
         }
         if (combatant1.hull == 0 || combatant2.hull == 0) {
             range = minimumRange //sneaky way of breaking this loop
         }
     }
     while (combatant1.hull >0 && combatant2.hull > 0) {
-        if (combatant1.scale < combatant2.scale) {
-            console.log(combatant1.fireGuns(combatant2, minimumRange, dicePool))
-            console.log(combatant2.fireGuns(combatant1, minimumRange, dicePool))
+        if (combatant1.shipClass.scale < combatant2.shipClass.scale) {
+            console.log(combat.fireGuns(combatant1, combatant2, minimumRange, dicePool))
+            console.log(combat.fireGuns(combatant2, combatant1, minimumRange, dicePool))
         }
         else{
-            console.log(combatant2.fireGuns(combatant1, minimumRange, dicePool))
-            console.log(combatant1.fireGuns(combatant2, minimumRange, dicePool))
+            console.log(combat.fireGuns(combatant2, combatant1, minimumRange, dicePool))
+            console.log(combat.fireGuns(combatant1, combatant2, minimumRange, dicePool))
         }
     }
     
@@ -80,18 +83,26 @@ function SimulateCombat(combatant1: ShipClass, combatant2: ShipClass, startingRa
     console.log("-------------------------")
 }
 
-SimulateCombat(leander, type1936A, 50, 6, 6, dicePool)
-SimulateCombat(leander, deutschland, 50, 6, 6, dicePool)
-SimulateCombat(leander, bismarck, 50, 6, 6, dicePool)
+const ajax = new Ship('HMS Ajax', leander)
+const z26 = new Ship('Z26', type1936A)
+const grafSpee = new Ship('Graf Spee', deutschland)
+const bismarck = new Ship('Bismarck', bismarckCruiser)
+const exeter = new Ship('HMS Exeter', york)
+const matabele = new Ship('HMS Matabele', tribal)
+const warspite = new Ship('HMS Warspite', queenElizabeth)
 
-SimulateCombat(york, type1936A, 50, 6, 6, dicePool)
-SimulateCombat(york, deutschland, 50, 6, 6, dicePool)
-SimulateCombat(york, bismarck, 50, 6, 6, dicePool)
+SimulateCombat(ajax, z26, 50, 6, 6, dicePool)
+SimulateCombat(ajax, grafSpee, 50, 6, 6, dicePool)
+SimulateCombat(ajax, bismarck, 50, 6, 6, dicePool)
 
-SimulateCombat(tribal, type1936A, 50, 6, 6, dicePool)
-SimulateCombat(tribal, deutschland, 50, 6, 6, dicePool)
-SimulateCombat(tribal, bismarck, 50, 6, 6, dicePool)
+SimulateCombat(exeter, z26, 50, 6, 6, dicePool)
+SimulateCombat(exeter, grafSpee, 50, 6, 6, dicePool)
+SimulateCombat(exeter, bismarck, 50, 6, 6, dicePool)
 
-SimulateCombat(queenElizabeth, type1936A, 50, 6, 6, dicePool)
-SimulateCombat(queenElizabeth, deutschland, 50, 6, 6, dicePool)
-SimulateCombat(queenElizabeth, bismarck, 50, 6, 6, dicePool)
+SimulateCombat(matabele, z26, 50, 6, 6, dicePool)
+SimulateCombat(matabele, grafSpee, 50, 6, 6, dicePool)
+SimulateCombat(matabele, bismarck, 50, 6, 6, dicePool)
+
+SimulateCombat(warspite, z26, 50, 6, 6, dicePool)
+SimulateCombat(warspite, grafSpee, 50, 6, 6, dicePool)
+SimulateCombat(warspite, bismarck, 50, 6, 6, dicePool)
