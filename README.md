@@ -14,6 +14,7 @@ Factors for first version:
 
 
 Future
+- hit locations
 - weather conditions
 - intervening units / terrain
 - target actively evading
@@ -27,3 +28,16 @@ Future
 - submarine combat
 - aircraft combat
 - high level bombing
+
+
+# Model
+Ships will have the following characteristics modelled
+- Accelleration - calculated from engine power and displacement
+- Turn rate - calculated similar to above
+- Top speed - lifted directly from ship statistics
+- Ship size - calculated from displacement
+- Overall armour rating - some noddy calculation initially
+- for each weapon system
+-   Calibre in inches
+-   Range
+-   Ammo modifiers
